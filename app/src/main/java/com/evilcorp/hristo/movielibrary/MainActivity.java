@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -14,14 +16,29 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.Calendar;
 
+public class MainActivity extends AppCompatActivity {
+    private Spinner yearSpin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Api Call for Data
         VolleyRequest volleyRequest = new VolleyRequest(this,getString(R.string.api_url));
         volleyRequest.SendRequest();
+        //Dropdown values
+        ArrayList<String> years = new ArrayList<>();
+        years.add(getString(R.string.spinner_title));
+        int thisYear = Calendar.getInstance().get(Calendar.YEAR);
+        for (int i = 1980; i <= thisYear; i++) {
+            years.add(Integer.toString(i));
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
+
+        yearSpin = (Spinner)findViewById(R.id.spinner);
+        yearSpin.setAdapter(adapter);
     }
 
 
