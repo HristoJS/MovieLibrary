@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Movies</string>
-    <string name="api_url">http://www.omdbapi.com/?</string>
+    <string name="api_url" formatted="false">http://www.omdbapi.com/?t=%s&amp;y=%s</string>
     <string name="spinner_title">Select Year</string>
 </resources>

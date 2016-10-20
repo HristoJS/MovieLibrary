@@ -5,19 +5,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.SearchView;
 import android.widget.Spinner;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private Spinner yearSpin;
@@ -26,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Api Call for Data
-        VolleyRequest volleyRequest = new VolleyRequest(this,getString(R.string.api_url));
-        volleyRequest.SendRequest();
+        final VolleyRequest volleyRequest = new VolleyRequest(this,getString(R.string.api_url));
         //Dropdown values
         ArrayList<String> years = new ArrayList<>();
         years.add(getString(R.string.spinner_title));
@@ -39,6 +48,21 @@ public class MainActivity extends AppCompatActivity {
 
         yearSpin = (Spinner)findViewById(R.id.spinner);
         yearSpin.setAdapter(adapter);
+
+        //SearchBar
+        SearchView searchView = (SearchView) findViewById(R.id.searchview);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                volleyRequest.SendRequest(query,yearSpin.getSelectedItem().toString());
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
 
@@ -50,16 +74,17 @@ public class MainActivity extends AppCompatActivity {
             requestQueue = Volley.newRequestQueue(context);
             this.url = url;
         }
-        void SendRequest(){
+        void SendRequest(final String title,final String year){
             // Request a string response from the provided URL.
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                    (Request.Method.GET, "http://www.omdbapi.com/?t=Test&y=1994&plot=short&r=json", null, new Response.Listener<JSONObject>() {
+           StringRequest jsonObjectRequest = new StringRequest
+                    (Request.Method.POST, String.format(url,title,year), new Response.Listener<String>() {
 
                         @Override
-                        public void onResponse(JSONObject response) {
+                        public void onResponse(String response) {
                             Log.d("Response",response.toString());
 
                         }
+
                     }, new Response.ErrorListener() {
 
                         @Override

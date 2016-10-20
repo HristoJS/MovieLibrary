@@ -21,7 +21,8 @@
     <SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/searchview"/>
+        android:id="@+id/searchview"
+        android:queryHint="@string/spinner_title"/>
 
     <ListView
         android:layout_width="match_parent"
