@@ -1,33 +1,28 @@
 package com.evilcorp.hristo.movielibrary;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private Spinner yearSpin;
@@ -65,12 +60,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    void ParseData(String response){
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        JsonObject json = (JsonObject)parser.parse(response);
 
+        //Type listType = new TypeToken<List<Protocol>>(){}.getType();
+        Type listType = new TypeToken<DataModel>(){}.getType();
+
+        //protocol = (List<Protocol>) gson.fromJson(json, listType);
+        DataModel model = (DataModel) gson.fromJson(json, listType);
+    }
 
     public class VolleyRequest {
         private String url;
         private RequestQueue requestQueue;
-        public VolleyRequest(Context context, String url){
+        VolleyRequest(Context context, String url){
             requestQueue = Volley.newRequestQueue(context);
             this.url = url;
         }
@@ -81,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onResponse(String response) {
-                            Log.d("Response",response.toString());
-
+                            Log.d("Response",response);
+                            ParseData(response);
                         }
 
                     }, new Response.ErrorListener() {
