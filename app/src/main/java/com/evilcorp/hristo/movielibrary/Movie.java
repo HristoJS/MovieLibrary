@@ -8,26 +8,26 @@ public class Movie {
 
     //ListView Data
     String Title;
-    int Year;
+    String Year;
     String Genre;
     String Poster;
-    int imdbRating;
+    String imdbRating;
 
     //Dialog Data
     String Runtime;
     String Director;
-    String[] Writer;
+    String Writer;
     String Country;
     String Awards;
-    String[]Actors;
+    String Actors;
     String Plot;
 
     //Unused
     String Rated;
-    Date Released;
+    String Released;
     String Language;
-    int Metascore;
-    int imdbVotes;
+    String Metascore;
+    String imdbVotes;
     String imdbID;
     String Type;
 }

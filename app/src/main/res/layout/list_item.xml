@@ -7,28 +7,32 @@
 
     <ImageView
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
         android:id="@+id/moviePoster" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp" >
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:id="@+id/titleText" />
+            android:id="@+id/titleText"
+            android:layout_margin="2dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:id="@+id/yearText" />
+            android:id="@+id/yearText"
+            android:layout_margin="2dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:id="@+id/genreText" />
+            android:id="@+id/genreText"
+            android:layout_margin="2dp"/>
     </LinearLayout>
 
 

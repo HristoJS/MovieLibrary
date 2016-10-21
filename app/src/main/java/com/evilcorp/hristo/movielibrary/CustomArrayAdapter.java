@@ -3,19 +3,16 @@ package com.evilcorp.hristo.movielibrary;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 /** Custom adapter for displaying an array of Planet objects. */
@@ -52,15 +49,34 @@ public class CustomArrayAdapter extends ArrayAdapter<Movie> {
         yearText.setText(movie.Year);
         genreText.setText(movie.Genre);
 
-        // For the Image , convert to bitmap
-        Bitmap bitmap = null;
-        try {
-            bitmap = BitmapFactory.decodeStream((InputStream)new URL(movie.Poster).getContent());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        moviePoster.setImageBitmap(bitmap);
+        // Download the image asynchronously
+        new DownloadImageTask(moviePoster)
+                .execute(movie.Poster);
 
         return convertView;
+    }
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 }

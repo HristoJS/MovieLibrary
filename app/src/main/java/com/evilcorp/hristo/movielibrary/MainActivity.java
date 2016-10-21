@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -28,7 +29,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private Spinner yearSpin;
-    private Movie movie;
+    private ArrayList<Movie> movies;
     private ListView movieList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         movieList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                movies.get(position);
             }
         });
 
@@ -79,15 +81,15 @@ public class MainActivity extends AppCompatActivity {
         JsonParser parser = new JsonParser();
         JsonObject json = (JsonObject)parser.parse(response);
         Type listType = new TypeToken<Movie>(){}.getType();
-        movie = gson.fromJson(json, listType);
-        VizualizeData();
+        movies = new ArrayList<>();
+        Movie movie = gson.fromJson(json, listType);
+        movies.add(movie);
+        VisualizeData();
     }
 
-    void VizualizeData(){
-        if(movie!=null){
-            if(movie.Response){
-                ArrayList<Movie> movies = new ArrayList<>();
-                movies.add(movie);
+    void VisualizeData(){
+        if(movies!=null){
+            if(movies.get(0).Response){
                 movieList.setAdapter(new CustomArrayAdapter(this, movies));
             }
             else{
@@ -121,6 +123,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
             // Add the request to the RequestQueue.
+            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    15000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             requestQueue.add(jsonObjectRequest);
         }
 
