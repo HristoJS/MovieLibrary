@@ -2,7 +2,8 @@ package com.evilcorp.hristo.movielibrary;
 
 import java.util.Date;
 
-public class DataModel {
+//Data Model
+public class Movie {
     boolean Response;    //true if movie found
 
     //ListView Data

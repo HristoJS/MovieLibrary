@@ -1,10 +1,15 @@
 package com.evilcorp.hristo.movielibrary;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
@@ -26,12 +31,15 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private Spinner yearSpin;
+    private Movie movie;
+    private ListView movieList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Api Call for Data
         final VolleyRequest volleyRequest = new VolleyRequest(this,getString(R.string.api_url));
+
         //Dropdown values
         ArrayList<String> years = new ArrayList<>();
         years.add(getString(R.string.spinner_title));
@@ -58,18 +66,37 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        //ListView
+        movieList = (ListView) findViewById(R.id.listview);
+        movieList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        });
+
     }
 
     void ParseData(String response){
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
         JsonObject json = (JsonObject)parser.parse(response);
+        Type listType = new TypeToken<Movie>(){}.getType();
+        movie = gson.fromJson(json, listType);
+        VizualizeData();
+    }
 
-        //Type listType = new TypeToken<List<Protocol>>(){}.getType();
-        Type listType = new TypeToken<DataModel>(){}.getType();
-
-        //protocol = (List<Protocol>) gson.fromJson(json, listType);
-        DataModel model = (DataModel) gson.fromJson(json, listType);
+    void VizualizeData(){
+        if(movie!=null){
+            if(movie.Response){
+                ArrayList<Movie> movies = new ArrayList<>();
+                movies.add(movie);
+                movieList.setAdapter(new CustomArrayAdapter(this, movies));
+            }
+            else{
+                Log.d("Response","No Movies found");
+            }
+        }
     }
 
     public class VolleyRequest {
@@ -89,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("Response",response);
                             ParseData(response);
                         }
-
                     }, new Response.ErrorListener() {
 
                         @Override
