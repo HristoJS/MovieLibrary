@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -43,11 +44,13 @@ public class CustomArrayAdapter extends ArrayAdapter<Movie> {
         TextView yearText = (TextView) convertView.findViewById( R.id.yearText );
         TextView genreText = (TextView) convertView.findViewById( R.id.genreText );
         ImageView moviePoster = (ImageView) convertView.findViewById( R.id.moviePoster );
+        RatingBar ratingBar = (RatingBar) convertView.findViewById(R.id.ratingBar);
 
         // Set the value of each cell
         titleText.setText(movie.Title);
         yearText.setText(movie.Year);
         genreText.setText(movie.Genre);
+        ratingBar.setRating(Float.valueOf(movie.imdbRating));
 
         // Download the image asynchronously
         new DownloadImageTask(moviePoster)

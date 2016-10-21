@@ -1,5 +1,6 @@
 package com.evilcorp.hristo.movielibrary;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -26,6 +28,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private Spinner yearSpin;
@@ -70,10 +73,36 @@ public class MainActivity extends AppCompatActivity {
         movieList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                movies.get(position);
+                CreateDialog(movies.get(position));
             }
         });
 
+    }
+
+    void CreateDialog(Movie movie){
+        //Dialog
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setTitle(R.string.movie_details);
+        ListView dialog_list = (ListView) dialog.findViewById(R.id.dialog_list);
+        ArrayList<String> details = new ArrayList<>();
+        details.add("Runtime: "+movie.Runtime);
+        details.add("Director: "+movie.Director);
+        details.add("Writer: "+movie.Writer);
+        details.add("Country: "+movie.Country);
+        details.add("Awards: "+movie.Awards);
+        details.add("Actors: "+movie.Actors);
+        details.add("Plot: "+movie.Plot);
+        dialog_list.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,details));
+        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     void ParseData(String response){
