@@ -2,6 +2,7 @@ package com.evilcorp.hristo.movielibrary;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -36,13 +37,14 @@ public class MainActivity extends AppCompatActivity {
     private Spinner yearSpin;
     private ArrayList<Movie> movies;
     private ListView movieList;
+    private CustomArrayAdapter customAdapter;
+    private ProgressDialog progress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Api Call for Data
         final VolleyRequest volleyRequest = new VolleyRequest(this,getString(R.string.api_url));
-
         //Dropdown values
         ArrayList<String> years = new ArrayList<>();
         years.add(getString(R.string.spinner_title));
@@ -60,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                //Clear previous searches
+                movieList.setAdapter(null);
+                progress = ProgressDialog.show(MainActivity.this, "Searching for movie",
+                        "Browsing the imdb database for matches...", true);
                 volleyRequest.SendRequest(query,yearSpin.getSelectedItem().toString());
                 return false;
             }
@@ -121,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
     void VisualizeData(){
         if(movies!=null){
             if(movies.get(0).Response){
-                movieList.setAdapter(new CustomArrayAdapter(this, movies));
+                customAdapter = new CustomArrayAdapter(this, movies);
+                movieList.setAdapter(customAdapter);
             }
             else{
                 Log.d("Response","No Movies found");
@@ -153,12 +160,14 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             Log.d("Response",response);
+                            progress.dismiss();
                             ParseData(response);
                         }
                     }, new Response.ErrorListener() {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            progress.dismiss();
                             error.printStackTrace();
                         }
                     });

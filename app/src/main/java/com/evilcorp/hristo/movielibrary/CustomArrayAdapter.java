@@ -35,10 +35,11 @@ public class CustomArrayAdapter extends ArrayAdapter<Movie> {
         Movie movie = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
-        }
+//        if (convertView == null) {
+//            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+//        }
 
+        convertView = inflater.inflate(R.layout.list_item, null);
         // Find the child views.
         TextView titleText = (TextView) convertView.findViewById( R.id.titleText );
         TextView yearText = (TextView) convertView.findViewById( R.id.yearText );
