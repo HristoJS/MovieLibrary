@@ -1,7 +1,9 @@
 package com.evilcorp.hristo.movielibrary;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -123,6 +125,15 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 Log.d("Response","No Movies found");
+                final AlertDialog dialog = new AlertDialog.Builder(this).create();
+                dialog.setTitle("Sorry");
+                dialog.setMessage(movies.get(0).Error);
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE,"Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialoginterface, int i) {
+                                dialog.dismiss();
+                            }
+                        });
+                dialog.show();
             }
         }
     }

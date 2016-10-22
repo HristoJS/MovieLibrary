@@ -51,7 +51,6 @@ public class CustomArrayAdapter extends ArrayAdapter<Movie> {
         yearText.setText(movie.Year);
         genreText.setText(movie.Genre);
         ratingBar.setRating(Float.valueOf(movie.imdbRating));
-
         // Download the image asynchronously
         new DownloadImageTask(moviePoster)
                 .execute(movie.Poster);

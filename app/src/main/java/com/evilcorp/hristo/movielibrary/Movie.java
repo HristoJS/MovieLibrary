@@ -5,6 +5,7 @@ import java.util.Date;
 //Data Model
 public class Movie {
     boolean Response;    //true if movie found
+    String Error;
 
     //ListView Data
     String Title;

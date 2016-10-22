@@ -16,13 +16,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinner"
         android:spinnerMode="dropdown"
-        android:prompt="@string/spinner_title"
     />
     <SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/searchview"
-        android:queryHint="@string/spinner_title"/>
+        android:queryHint="@string/search_hint"
+        />
 
     <ListView
         android:layout_width="match_parent"
