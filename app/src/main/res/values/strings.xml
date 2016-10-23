@@ -5,4 +5,9 @@
     <string name="spinner_title">Select an year</string>
     <string name="dialog_confirm">OK</string>
     <string name="movie_details">Movie Details</string>
+    <string name="search_error">The movie title must be longer than 1 symbol.</string>
+    <string name="year_error">Please select an year.</string>
+    <string name="error">Error</string>
+    <string name="progress_message">Browsing the imdb database for matches...</string>
+    <string name="progress_title">Searching for movie</string>
 </resources>

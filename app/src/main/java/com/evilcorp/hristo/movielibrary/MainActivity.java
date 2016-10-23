@@ -31,6 +31,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,8 +65,16 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 //Clear previous searches
                 movieList.setAdapter(null);
-                progress = ProgressDialog.show(MainActivity.this, "Searching for movie",
-                        "Browsing the imdb database for matches...", true);
+
+                //Check for valid data
+                String year = yearSpin.getSelectedItem().toString();
+                if(query.length()<2)
+                    MyAlertDialog(getString(R.string.error),getString(R.string.search_error));
+                else if(year.contains(getString(R.string.spinner_title)))
+                    MyAlertDialog(getString(R.string.error),getString(R.string.year_error));
+                else
+                progress = ProgressDialog.show(MainActivity.this, getString(R.string.progress_title),
+                        getString(R.string.progress_message), true);
                 volleyRequest.SendRequest(query,yearSpin.getSelectedItem().toString());
                 return false;
             }
@@ -101,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
         details.add("Awards: "+movie.Awards);
         details.add("Actors: "+movie.Actors);
         details.add("Plot: "+movie.Plot);
-        dialog_list.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,details));
+
+        dialog_list.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,CheckForNA(details)));
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +121,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    ArrayList<String> CheckForNA(ArrayList<String> details){
+        ArrayList<String> new_details = new ArrayList<>();
+        for(String detail : details) {
+            if (!detail.contains("N/A")) {
+                new_details.add(detail);
+            }
+        }
+        return new_details;
     }
 
     void ParseData(String response){
@@ -124,6 +144,18 @@ public class MainActivity extends AppCompatActivity {
         VisualizeData();
     }
 
+    void MyAlertDialog(String title, String message){
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setTitle(title);
+        dialog.setMessage(message);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialoginterface, int i) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
     void VisualizeData(){
         if(movies!=null){
             if(movies.get(0).Response){
@@ -132,15 +164,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 Log.d("Response","No Movies found");
-                final AlertDialog dialog = new AlertDialog.Builder(this).create();
-                dialog.setTitle("Sorry");
-                dialog.setMessage(movies.get(0).Error);
-                dialog.setButton(DialogInterface.BUTTON_POSITIVE,"Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialoginterface, int i) {
-                                dialog.dismiss();
-                            }
-                        });
-                dialog.show();
+                MyAlertDialog("Sorry",movies.get(0).Error);
             }
         }
     }
