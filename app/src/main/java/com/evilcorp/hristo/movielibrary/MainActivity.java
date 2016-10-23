@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Api Call for Data
         final VolleyRequest volleyRequest = new VolleyRequest(this,getString(R.string.api_url));
+
         //Dropdown values
         ArrayList<String> years = new ArrayList<>();
         years.add(getString(R.string.spinner_title));
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Custom dialog to show movie details
     void CreateDialog(Movie movie){
         //Dialog
         final Dialog dialog = new Dialog(this);
@@ -121,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    //Remove missing details
     ArrayList<String> CheckForNA(ArrayList<String> details){
         ArrayList<String> new_details = new ArrayList<>();
         for(String detail : details) {
@@ -131,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         return new_details;
     }
 
+    //Parse response to data object of type Movie
     void ParseData(String response){
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
@@ -142,18 +146,7 @@ public class MainActivity extends AppCompatActivity {
         VisualizeData();
     }
 
-    void MyAlertDialog(String title, String message){
-        final AlertDialog dialog = new AlertDialog.Builder(this).create();
-        dialog.setTitle(title);
-        dialog.setMessage(message);
-        dialog.setButton(DialogInterface.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialoginterface, int i) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
+    //Handle Data
     void VisualizeData(){
         if(movies!=null){
             if(movies.get(0).Response){
@@ -166,7 +159,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+    //Reusable alert
+    void MyAlertDialog(String title, String message){
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setTitle(title);
+        dialog.setMessage(message);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialoginterface, int i) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
+    //HTTP Request using Volley
     public class VolleyRequest {
         private String url;
         private RequestQueue requestQueue;

@@ -34,11 +34,6 @@ public class CustomArrayAdapter extends ArrayAdapter<Movie> {
     public View getView(int position, View convertView, ViewGroup parent) {
         Movie movie = getItem(position);
 
-        // Check if an existing view is being reused, otherwise inflate the view
-//        if (convertView == null) {
-//            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
-//        }
-
         convertView = inflater.inflate(R.layout.list_item, null);
         // Find the child views.
         TextView titleText = (TextView) convertView.findViewById( R.id.titleText );
@@ -59,6 +54,8 @@ public class CustomArrayAdapter extends ArrayAdapter<Movie> {
 
         return convertView;
     }
+
+    //Method to get image from url
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
