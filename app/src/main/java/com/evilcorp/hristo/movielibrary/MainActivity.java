@@ -31,14 +31,12 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private Spinner yearSpin;
     private ArrayList<Movie> movies;
     private ListView movieList;
-    private CustomArrayAdapter customAdapter;
+    CustomArrayAdapter customAdapter;
     private ProgressDialog progress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
